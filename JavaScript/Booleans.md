@@ -9,6 +9,8 @@ let isFalse = false;
 
 ## Comparison Operators
 
+Comparison operators are used to compare values and return a boolean value.
+
 | Operator | Description                                 |
 | -------- | ------------------------------------------- |
 | ==       | Equal to                                    |
@@ -22,6 +24,8 @@ let isFalse = false;
 | ?        | Ternary operator (condition ? true : false) |
 
 ## Logical Operators
+
+Logical operators are used to combine or negate boolean values.
 
 | Operator | Description |
 | -------- | ----------- |

@@ -29,6 +29,8 @@ typeof NaN; // "number"
 
 ## Order of Operations
 
+The order of operations in JavaScript is the same as in mathematics.
+
 | Order | Operation                                   |
 | ----- | ------------------------------------------- |
 | 1     | Brackets                                    |
@@ -39,6 +41,8 @@ typeof NaN; // "number"
 The order of operations in mathematics is often remembered by the acronym BODMAS
 
 ## Assignment variables
+
+Assignment operators are used to assign values to variables.
 
 ```javascript
 // Normal assignment
@@ -67,6 +71,8 @@ console.log(x); // Output: 8
 
 ## Increment and Decrement operators
 
+Increment and decrement operators are used to increase or decrease the value of a variable by 1.
+
 ```javascript
 // Increment operators
 let a = 5;
@@ -87,4 +93,19 @@ console.log(c); // Outputs 4
 
 console.log(--d); // Decrements d to 4, then outputs 4
 console.log(d); // Outputs 4
+```
+
+## Math Object
+
+The Math object in JavaScript provides a set of methods and properties for performing mathematical operations. Here are some examples of how to use the Math object:
+
+```javascript
+console.log(Math.PI); // Outputs the value of PI
+console.log(Math.sqrt(16)); // Outputs the square root of 16
+console.log(Math.abs(-5)); // Outputs the absolute value of -5
+console.log(Math.round(3.7)); // Outputs the rounded value of 3.7
+console.log(Math.ceil(3.2)); // Outputs the smallest integer greater than or equal to 3.2
+console.log(Math.floor(3.8)); // Outputs the largest integer less than or equal to 3.8
+console.log(Math.pow(2, 3)); // Outputs 2 raised to the power of 3
+console.log(Math.random()); // Outputs a random number between 0 and 1
 ```
