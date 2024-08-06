@@ -57,3 +57,14 @@ let text = "Hello, world!";
 console.log(text[0]); // "H"
 console.log(text.charAt(0)); // "H"
 ```
+
+## Converting Strings to Numbers
+
+You can convert a string to a number using the Number() function or the parseInt() and parseFloat() functions.
+
+```javascript
+let text = "123";
+console.log(Number(text)); // 123
+console.log(parseInt(text)); // 123
+console.log(parseFloat(text)); // 123
+```

@@ -3,8 +3,9 @@
 1. [Variables](Variables.md)
 2. [Strings](Strings.md)
 3. [Booleans](Booleans.md)
-4. [Math](Math.md)
-5. [Arrays](Arrays.md)
+4. [Conditionals](Conditionals.md)
+5. [Math](Math.md)
+6. [Arrays](Arrays.md)
 
 <!-- 4. [Classes](Classes.md)
 6. [DOM](DOM.md)
