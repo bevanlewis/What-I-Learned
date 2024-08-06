@@ -279,3 +279,21 @@ let [first, ...rest] = fruits;
 console.log(first); // "apple"
 console.log(rest); // ["banana", "orange"]
 ```
+
+## Comparing Arrays
+
+You can not compare arrays using the `===` operator. When using the `===` operator, it will return `false` even if the arrays have the same elements in the same order, this is because the arrays are stored in different memory locations and javascript compares the memory locations of arrays.
+
+```javascript
+let fruits1 = ["apple", "banana", "orange"];
+let fruits2 = ["apple", "banana", "orange"];
+console.log(fruits1 === fruits2); // false
+```
+
+To compare arrays, you can use the `every` method to check if all elements in the arrays are equal.
+
+```javascript
+let fruits1 = ["apple", "banana", "orange"];
+let fruits2 = ["apple", "banana", "orange"];
+console.log(fruits1.every((element, index) => element === fruits2[index])); // true
+```
