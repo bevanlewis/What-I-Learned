@@ -69,3 +69,62 @@ let person = {
 delete person.age;
 console.log(person.age); // undefined
 ```
+
+## Object Iteration
+
+You can iterate over an object using a `for...in` loop.
+
+```javascript
+let person = {
+  name: "John",
+  age: 30,
+  isStudent: true,
+};
+for (let key in person) {
+  console.log(key); // "name", "age", "isStudent"
+}
+```
+
+## Object Destructuring
+
+Object destructuring allows you to extract values from objects and assign them to variables.
+
+```javascript
+let person = {
+  name: "John",
+  age: 30,
+  isStudent: true,
+};
+let { name, age } = person;
+console.log(name); // "John"
+console.log(age); // 30
+```
+
+### Object Destructuring with Spread Operator
+
+You can use object destructuring with the spread operator to extract values from objects and assign them to variables.
+
+```javascript
+let person = {
+  name: "John",
+  age: 30,
+  isStudent: true,
+};
+let { name, ...rest } = person;
+console.log(name); // "John"
+console.log(rest); // { age: 30, isStudent: true }
+```
+
+## Object Methods
+
+You can extract the keys and values from an object using the `Object.keys()` and `Object.values()` methods.
+
+```javascript
+let person = {
+  name: "John",
+  age: 30,
+  isStudent: true,
+};
+console.log(Object.keys(person)); // ["name", "age", "isStudent"]
+console.log(Object.values(person)); // ["John", 30, true]
+```

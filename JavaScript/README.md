@@ -6,6 +6,9 @@
 4. [Conditionals](Conditionals.md)
 5. [Math](Math.md)
 6. [Arrays](Arrays.md)
+7. [Objects](Objects.md)
+8. [Loops](Loops.md)
+9. [Functions](Functions.md)
 
 <!-- 4. [Classes](Classes.md)
 6. [DOM](DOM.md)
