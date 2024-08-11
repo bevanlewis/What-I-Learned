@@ -231,7 +231,7 @@ The `some` method tests whether at least one element in the array passes the tes
 ```javascript
 let numbers = [1, 3, 5, 7, 9];
 let hasEven = numbers.some((num) => num % 2 === 0);
-console.log(hasEven); // true
+console.log(hasEven); // false
 ```
 
 ## Array Iteration
