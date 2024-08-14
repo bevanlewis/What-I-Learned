@@ -9,11 +9,7 @@
 7. [Objects](Objects.md)
 8. [Loops](Loops.md)
 9. [Functions](Functions.md)
+10. [DOM](DOM.md)
 
 <!-- 4. [Classes](Classes.md)
-6. [DOM](DOM.md)
-7. [Functions](Functions.md)
-8. [Loops](Loops.md)
-9. [Objects](Objects.md)
-10. [Operators](Operators.md)
-11. [Strings](Strings.md) -->
+-->
