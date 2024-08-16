@@ -56,3 +56,50 @@ getSomething()
     console.log(error);
   });
 ```
+
+# Dealing with API's and JSON
+
+### Parsing Json
+
+`JSON.parse(data)` is used to convert a JSON string into a JSON object.
+
+`JSON.stringify(data)` is used to convert a JSON object into a JSON string.
+
+## Fetch API
+
+The Fetch API provides an interface for fetching resources (including across the network). It will seem familiar to anyone who has used XMLHttpRequest, but the new API provides a more powerful and flexible feature set.
+
+### GET Request
+
+```javascript
+fetch("https://api.github.com/users/github")
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+```
+
+### POST Request
+
+```javascript
+const data = {
+  name: "github",
+  age: 30,
+  city: "San Francisco",
+};
+fetch("https://api.github.com/users/github", {
+  method: "POST",
+  body: JSON.stringify(data),
+  headers: {
+    "Content-type": "application/json; charset=UTF-8",
+  },
+});
+```
+
+## Fetch
+
+The Fetch API provides an interface for fetching resources (including across the network).
+
+```javascript
+fetch("https://api.github.com/users/github")
+  .then((response) => response.json()) // Parse the response as JSON
+  .then((data) => console.log(data)); // Log the data to the console
+```
