@@ -10,6 +10,5 @@
 8. [Loops](Loops.md)
 9. [Functions](Functions.md)
 10. [DOM](DOM.md)
-
-<!-- 4. [Classes](Classes.md)
--->
+11. [Asyncronous Javascript and handling APIs](AsyncJS.md)
+12. [Classes](Classes.md)
