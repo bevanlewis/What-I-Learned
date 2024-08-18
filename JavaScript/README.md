@@ -12,3 +12,4 @@
 10. [DOM](DOM.md)
 11. [Asyncronous Javascript and handling APIs](AsyncJS.md)
 12. [Classes](Classes.md)
+13. [Errors](Errors.md)
