@@ -46,3 +46,36 @@ const dog = new Dog("Fido");
 console.log(dog.name); // "Fido"
 console.log(dog.breed); // "Golden Retriever"
 ```
+
+### Checking inheritance
+
+To check if an object is an instance of a class, use the `instanceof` operator.
+
+```javascript
+class Pet {
+  constructor(name) {
+    this.name = name;
+  }
+
+  introduce() {
+    console.log(`This is my pet, ${this.name}.`);
+  }
+}
+
+class Dog extends Pet {}
+const dog = new Dog("Fido");
+console.log(dog instanceof Dog); // true
+console.log(dog instanceof Pet); // true
+```
+
+```javascript
+const dog = new Dog("Otis");
+
+Dog.prototype.isPrototypeOf(dog); // => true
+Pet.prototype.isPrototypeOf(dog); // => true
+Pet.prototype.isPrototypeOf(Dog.prototype); // => true
+
+Pet.prototype.hasOwnProperty("introduce"); // => true
+Dog.prototype.hasOwnProperty("introduce"); // => false
+dog.hasOwnProperty("introduce"); // => false
+```
