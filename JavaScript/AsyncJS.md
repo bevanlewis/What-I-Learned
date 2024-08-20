@@ -29,10 +29,11 @@ async function doSomething() {
 doSomething();
 ```
 
-### then and catch
+### then, catch and finally
 
 The `then()` method returns a Promise and deals with fulfilled results.
 The `catch()` method returns a Promise and deals with rejected results.
+The `finally()` method returns a Promise and deals with both fulfilled and rejected results.
 
 ```javascript
 function getSomething() {
@@ -54,7 +55,7 @@ getSomething()
   })
   .catch(error => {
     console.log(error);
-  });
+  }).finally(() => console.log("Promise"));
 ```
 
 # Dealing with API's and JSON
