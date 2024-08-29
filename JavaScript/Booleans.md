@@ -65,8 +65,8 @@ Logical operators are used to combine or negate boolean values.
 JavaScript evaluates expressions from left to right. If the value of an expression can be determined based on the first operand, the second operand is not evaluated.
 
 ```javascript
-let a = 0;
-let b = 1;
+let a = 1;
+let b = 0;
 // b is not evaluated because a is truthy
 let result = a || b; // result is 0
 ```
