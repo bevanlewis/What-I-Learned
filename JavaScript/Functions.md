@@ -89,13 +89,14 @@ sayHello(); // "Hello, John!"
 
 ### Local Scope
 
-Variables defined inside a function have local scope.
+Variables defined inside a function have local scope, meaning they are only accessible within that function.
 
 ```javascript
 function sayHello() {
-  let name = "Alice";
+  let name = "Alice"; // This variable is defined inside the function and has local scope.
+  console.log(`Hello, ${name}!`); // This line logs the greeting to the console.
 }
-sayHello(); // ReferenceError: name is not defined
+sayHello(); // This calls the function, executing the code inside it.
 ```
 
 ### Block Scope
