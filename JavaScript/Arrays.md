@@ -209,9 +209,9 @@ console.log(index); // 2
 The `includes` method determines whether an array includes a certain value among its entries, returning true or false as appropriate.
 
 ```javascript
-et fruits = ['apple', 'banana', 'orange'];
-console.log(fruits.includes('banana')); // true
-console.log(fruits.includes('grape')); // false
+let fruits = ["apple", "banana", "orange"];
+console.log(fruits.includes("banana")); // true
+console.log(fruits.includes("grape")); // false
 ```
 
 ### Array Every

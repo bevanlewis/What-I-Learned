@@ -1,4 +1,4 @@
-# JavaScript Table of Contents
+# MongoDB Table of Contents
 
 1. [Insert](Insert.md)
 2. [Query](Query.md)

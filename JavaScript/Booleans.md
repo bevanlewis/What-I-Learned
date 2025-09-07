@@ -68,7 +68,7 @@ JavaScript evaluates expressions from left to right. If the value of an expressi
 let a = 1;
 let b = 0;
 // b is not evaluated because a is truthy
-let result = a || b; // result is 0
+let result = a || b; // result is 1
 ```
 
 ## Truthy and Falsy Values
