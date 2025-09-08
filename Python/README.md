@@ -1,0 +1,15 @@
+# Python Table of Contents
+
+1. [Variables and Data Types](Variables.md)
+2. [Strings](Strings.md)
+3. [Numbers and Math](Numbers.md)
+4. [Booleans and Conditionals](Booleans.md)
+5. [Lists](Lists.md)
+6. [Dictionaries](Dictionaries.md)
+7. [Tuples](Tuples.md)
+8. [Loops](Loops.md)
+9. [Functions](Functions.md)
+10. [Modules and Packages](Modules.md)
+11. [File I/O](FileIO.md)
+12. [Classes and OOP](Classes.md)
+13. [Exceptions and Error Handling](Exceptions.md)
