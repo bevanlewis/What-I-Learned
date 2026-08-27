@@ -127,17 +127,17 @@ let link = document.querySelector("a");
 link.addEventListener("click", function (event) {
   event.preventDefault();
   console.log("The link was clicked.");
-};
+});
 ```
 
-## Stop Propogation
+## Stop Propagation
 
-To stop an event from propogating (prevent event bubbling), use the `event.stopPropagation()` method.
+To stop an event from propagating (prevent event bubbling), use the `event.stopPropagation()` method.
 
 ```javascript
 let div = document.querySelector("div");
 div.addEventListener("click", function (event) {
   event.stopPropagation();
   console.log("The div was clicked.");
-}
+});
 ```

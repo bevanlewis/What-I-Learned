@@ -32,8 +32,6 @@ let fullName = `${firstName} ${lastName}`;
 console.log(fullName); // "John Doe"
 ```
 
-console.log(fullName); // "John Doe"
-
 ## String Methods
 
 String methods are used to manipulate strings.
@@ -46,6 +44,8 @@ console.log(text.toLowerCase()); // "hello, world!"
 console.log(text.indexOf("world")); // 7
 console.log(text.substring(7, 12)); // "world"
 console.log(text.replace("world", "JavaScript")); // "Hello, JavaScript!"
+console.log(text.includes("world")); // true
+console.log("  hello  ".trim()); // "hello"
 ```
 
 ### Accessing a string character
@@ -63,8 +63,30 @@ console.log(text.charAt(0)); // "H"
 You can convert a string to a number using the Number() function or the parseInt() and parseFloat() functions.
 
 ```javascript
-let text = "123";
-console.log(Number(text)); // 123
-console.log(parseInt(text)); // 123
-console.log(parseFloat(text)); // 123
+const integerText = "123";
+const decimalText = "12.5";
+
+console.log(Number(integerText)); // 123
+console.log(Number.parseInt(integerText, 10)); // 123
+console.log(Number.parseFloat(decimalText)); // 12.5
+console.log(Number.isNaN(Number("unknown"))); // true
+```
+
+## Case-insensitive comparison and search
+
+Normalize both values before comparing them:
+
+```javascript
+function includesIgnoreCase(value, searchTerm) {
+  return value.toLowerCase().includes(searchTerm.toLowerCase());
+}
+```
+
+Use `localeCompare()` for user-facing alphabetical sorting:
+
+```javascript
+const names = ["Grace", "ada"];
+const sorted = names.toSorted((a, b) =>
+  a.localeCompare(b, undefined, { sensitivity: "base" }),
+);
 ```

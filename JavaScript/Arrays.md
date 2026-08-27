@@ -1,299 +1,254 @@
 # JavaScript Arrays
 
-Arrays are used to store multiple values in a single variable.
+Arrays store ordered collections of values. Array indexes start at `0`.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-```
+const fruits = ["apple", "banana", "orange"];
 
-## Accessing Array Elements
-
-You can access array elements using their index.
-
-```javascript
-let fruits = ["apple", "banana", "orange"];
 console.log(fruits[0]); // "apple"
-console.log(fruits[1]); // "banana"
-console.log(fruits[2]); // "orange"
-```
-
-## Array Length
-
-The `length` property returns the number of elements in an array.
-
-```javascript
-let fruits = ["apple", "banana", "orange"];
 console.log(fruits.length); // 3
 ```
 
-## Array Methods
+## Mutating and non-mutating operations
 
-Array methods are used to manipulate arrays.
+Some array methods change the original array. This matters when the same array is used elsewhere, particularly in UI state.
 
-Methods described in this section:
-
-- `push`
-- `pop`
-- `shift`
-- `unshift`
-- `concat`
-- `slice`
-- `splice`
-- `join`
-- `sort`
-- `reverse`
-- `indexOf`
-- `forEach`
-- `map`
-- `filter`
-- `reduce`
-- `find`
-- `findIndex`
-- `every`
-- `some`
-- `includes`
-
-### Array Push and Pop
-
-The `push` method adds one or more elements to the end of an array and returns the new length of the array. The `pop` method removes the last element from an array and returns that element.
+| Mutates the array | Returns a new value or array |
+| --- | --- |
+| `push`, `pop`, `shift`, `unshift` | `concat`, `slice` |
+| `splice`, `sort`, `reverse` | `map`, `filter`, `toSorted` |
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-fruits.push("grape");
-console.log(fruits); // ["apple", "banana", "orange", "grape"]
-let lastFruit = fruits.pop();
-console.log(lastFruit); // "grape"
+const original = [3, 1, 2];
+const sorted = [...original].sort((a, b) => a - b);
+
+console.log(original); // [3, 1, 2]
+console.log(sorted); // [1, 2, 3]
 ```
 
-### Array Shift and Unshift
-
-The `shift` method removes the first element from an array and returns that element. The `unshift` method adds one or more elements to the beginning of an array and returns the new length of the array.
+`toSorted()` is a modern non-mutating alternative to `sort()`:
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-let firstFruit = fruits.shift();
-console.log(firstFruit); // "apple"
-console.log(fruits); // ["banana", "orange"]
-fruits.unshift("pear");
-console.log(fruits); // ["pear", "banana", "orange"]
+const sorted = [3, 1, 2].toSorted((a, b) => a - b);
 ```
 
-### Array Concat
+Use `[...array].sort(...)` when the runtime does not support `toSorted()`.
 
-The `concat` method is used to merge two or more arrays. It does not change the existing arrays, but instead returns a new array.
+## Adding and removing values
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-let moreFruits = ["grape", "kiwi"];
-let allFruits = fruits.concat(moreFruits);
-console.log(allFruits); // ["apple", "banana", "orange", "grape", "kiwi"]
+const fruits = ["banana"];
+
+fruits.push("orange"); // Add to the end
+fruits.unshift("apple"); // Add to the beginning
+
+const last = fruits.pop(); // Remove from the end
+const first = fruits.shift(); // Remove from the beginning
 ```
 
-### Array Slice and Splice
-
-The `slice` method returns a shallow copy of a portion of an array into a new array object. The `splice` method changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.
+`slice(start, end)` copies part of an array without changing it. The end index is excluded.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-let citrusFruits = fruits.slice(1, 3);
-console.log(citrusFruits); // ["banana", "orange"]
-let removedFruits = fruits.splice(1, 2, "pear", "grape");
-console.log(removedFruits); // ["banana", "orange"]
-console.log(fruits); // ["apple", "pear", "grape"]
+const values = ["a", "b", "c", "d"];
+console.log(values.slice(1, 3)); // ["b", "c"]
+console.log(values); // ["a", "b", "c", "d"]
 ```
 
-### Array Join
-
-The `join` method creates and returns a new string by concatenating all of the elements in an array, separated by a specified separator.
+`splice(start, deleteCount, ...items)` changes the original array.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-let fruitsString = fruits.join(", ");
-console.log(fruitsString); // "apple, banana, orange"
+const values = ["a", "b", "c"];
+const removed = values.splice(1, 1, "new");
+
+console.log(removed); // ["b"]
+console.log(values); // ["a", "new", "c"]
 ```
 
-### Array Sort
+## Iterating and transforming
 
-The `sort` method sorts the elements of an array in place and returns the sorted array.
+### `forEach`
+
+Use `forEach()` for side effects such as logging. It always returns `undefined`.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-fruits.sort();
-console.log(fruits); //
-// ["apple", "banana", "orange"]
+["a", "b"].forEach((value, index) => {
+  console.log(index, value);
+});
 ```
 
-### Array Reverse
+### `map`
 
-The `reverse` method reverses the order of the elements in an array in place.
+Use `map()` when every input item should produce one output item.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-fruits.reverse();
-console.log;
+const users = [
+  { id: 1, name: "Ada" },
+  { id: 2, name: "Grace" },
+];
+
+const names = users.map((user) => user.name);
+// ["Ada", "Grace"]
 ```
 
-### Array IndexOf
+### `filter`
 
-The `indexOf` method returns the index of the first occurrence of a specified value in an array.
+Use `filter()` to keep the items that satisfy a condition.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-console.log(fruits.indexOf("banana")); // 1
+const users = [
+  { name: "Ada", active: true },
+  { name: "Grace", active: false },
+];
+
+const activeUsers = users.filter((user) => user.active);
 ```
 
-### Array ForEach
+### `find` and `findIndex`
 
-The `forEach` method executes a provided function once for each array element.
+`find()` returns the first matching value or `undefined`. `findIndex()` returns its index or `-1`.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-fruits.forEach((fruit) => console.log(fruit));
-// "apple"
-// "banana"
-// "orange"
+const users = [{ id: 1 }, { id: 2 }];
+
+console.log(users.find((user) => user.id === 2)); // { id: 2 }
+console.log(users.findIndex((user) => user.id === 3)); // -1
 ```
 
-### Array Map
-
-The `map` method creates a new array with the results of calling a provided function on every element in the calling array.
+### `some` and `every`
 
 ```javascript
-let numbers = [1, 2, 3, 4, 5];
-let doubled = numbers.map((num) => num * 2);
-console.log(doubled); // [2, 4, 6, 8, 10]
+const values = [2, 4, 6];
+
+console.log(values.some((value) => value > 5)); // true
+console.log(values.every((value) => value % 2 === 0)); // true
 ```
 
-### Array Filter
+### `reduce`
 
-The `filter` method creates a new array with all elements that pass the test implemented by the provided function.
+`reduce()` combines an array into one result. Supply an initial accumulator value so empty arrays behave predictably.
 
 ```javascript
-let ages = [32, 33, 16, 40];
-let adults = ages.filter((age) => age >= 18);
-console.log(adults); // [32, 33, 40]
+const prices = [10, 15, 20];
+const total = prices.reduce((sum, price) => sum + price, 0);
+
+console.log(total); // 45
 ```
 
-### Array Reduce
-
-The `reduce` method applies a function against an accumulator and each element in the array (from left to right) to reduce it to a single value.
+It can also group or count values:
 
 ```javascript
-let numbers = [1, 2, 3, 4, 5];
-let sum = numbers.reduce((acc, curr) => acc + curr, 0);
-console.log(sum); // 15
+const statuses = ["open", "closed", "open"];
+
+const counts = statuses.reduce((result, status) => {
+  result[status] = (result[status] ?? 0) + 1;
+  return result;
+}, {});
+
+console.log(counts); // { open: 2, closed: 1 }
 ```
 
-### Array Find
+Prefer a simple loop when a complex `reduce()` would be difficult to read.
 
-The `find` method returns the value of the first element in the array that satisfies the provided testing function.
+## Sorting correctly
+
+Without a comparison function, `sort()` converts values to strings. This produces incorrect numeric ordering:
 
 ```javascript
-let numbers = [5, 12, 8, 130, 44];
-let found = numbers.find((num) => num > 10);
-console.log(found); // 12
+console.log([2, 10, 3].sort()); // [10, 2, 3]
 ```
 
-### Array FindIndex
-
-The `findIndex` method returns the index of the first element in the array that satisfies the provided testing function.
+Use a comparator for numbers:
 
 ```javascript
-let fruits = ["apple", "banana", "orange", "grape"];
-let index = fruits.findIndex((fruit) => fruit === "orange");
-console.log(index); // 2
+const ascending = [2, 10, 3].toSorted((a, b) => a - b);
+const descending = [2, 10, 3].toSorted((a, b) => b - a);
 ```
 
-### Array Includes
-
-The `includes` method determines whether an array includes a certain value among its entries, returning true or false as appropriate.
+Use `localeCompare()` for strings:
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-console.log(fruits.includes("banana")); // true
-console.log(fruits.includes("grape")); // false
+const users = [{ name: "Grace" }, { name: "ada" }];
+
+const sorted = users.toSorted((a, b) =>
+  a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+);
 ```
 
-### Array Every
-
-The `every` method tests whether all elements in the array pass the test implemented by the provided function.
+When values may be missing, choose an explicit fallback:
 
 ```javascript
-let numbers = [2, 4, 6, 8, 10];
-let allEven = numbers.every((num) => num % 2 === 0);
-console.log(allEven); // true
+const sorted = users.toSorted((a, b) =>
+  (a.company?.name ?? "").localeCompare(b.company?.name ?? ""),
+);
 ```
 
-### Array Some
-
-The `some` method tests whether at least one element in the array passes the test implemented by the provided function.
+For deterministic results, add a secondary comparison when primary values are equal:
 
 ```javascript
-let numbers = [1, 3, 5, 7, 9];
-let hasEven = numbers.some((num) => num % 2 === 0);
-console.log(hasEven); // false
+const sorted = users.toSorted(
+  (a, b) =>
+    a.company.localeCompare(b.company) || a.name.localeCompare(b.name),
+);
 ```
 
-## Array Iteration
+## Chaining data-processing methods
 
-You can iterate over an array using a `for` loop.
-Check [Loops](Loops.md) for more info on how loops work.
+Each step should have one clear responsibility:
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-for (let i = 0; i < fruits.length; i++) {
-  console.log(fruits[i]);
+function getActiveUserNames(users, searchTerm) {
+  const query = searchTerm.trim().toLowerCase();
+
+  return users
+    .filter((user) => user.active === true)
+    .filter((user) => (user.name ?? "").toLowerCase().includes(query))
+    .toSorted((a, b) => a.name.localeCompare(b.name))
+    .map((user) => user.name);
 }
 ```
 
-## Array Spread Operator
+## Spread and destructuring
 
-The spread operator (`...`) allows you to expand an array into its individual elements.
-
-```javascript
-let fruits = ["apple", "banana", "orange"];
-let moreFruits = ["grape", "kiwi"];
-let allFruits = [...fruits, ...moreFruits];
-console.log(allFruits); // ["apple", "banana", "orange", "grape", "kiwi"]
-```
-
-## Array Destructuring
-
-Array destructuring allows you to extract values from arrays and assign them to variables.
+Spread creates a shallow copy. Nested objects are still shared references.
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-let [first, second, third] = fruits;
-console.log(first); // "apple"
-console.log(second); // "banana"
-console.log(third); // "orange
+const first = ["a", "b"];
+const combined = [...first, "c"];
+const [head, ...rest] = combined;
+
+console.log(head); // "a"
+console.log(rest); // ["b", "c"]
 ```
 
-### Array Destructuring with Spread Operator
-
-You can use array destructuring with the spread operator to extract values from arrays and assign them to variables.
+## Checking and comparing arrays
 
 ```javascript
-let fruits = ["apple", "banana", "orange"];
-let [first, ...rest] = fruits;
-console.log(first); // "apple"
-console.log(rest); // ["banana", "orange"]
+console.log(Array.isArray([])); // true
+console.log(["a", "b"].includes("b")); // true
+console.log(["a", "b"].indexOf("missing")); // -1
 ```
 
-## Comparing Arrays
-
-You can not compare arrays using the `===` operator. When using the `===` operator, it will return `false` even if the arrays have the same elements in the same order, this is because the arrays are stored in different memory locations and javascript compares the memory locations of arrays.
+Arrays are compared by reference, not contents:
 
 ```javascript
-let fruits1 = ["apple", "banana", "orange"];
-let fruits2 = ["apple", "banana", "orange"];
-console.log(fruits1 === fruits2); // false
+console.log([1, 2] === [1, 2]); // false
 ```
 
-To compare arrays, you can use the `every` method to check if all elements in the arrays are equal.
+For simple one-dimensional arrays:
 
 ```javascript
-let fruits1 = ["apple", "banana", "orange"];
-let fruits2 = ["apple", "banana", "orange"];
-console.log(fruits1.every((element, index) => element === fruits2[index])); // true
+function arraysEqual(a, b) {
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+}
 ```
+
+This is not a deep comparison for nested objects or arrays.
+
+## Common mistakes
+
+- Calling `sort()` directly on an array that must remain unchanged.
+- Forgetting a numeric comparator.
+- Expecting `forEach()` to return a transformed array.
+- Omitting the initial value passed to `reduce()`.
+- Assuming `find()` always returns a value.
+- Accessing nested properties without handling missing data.

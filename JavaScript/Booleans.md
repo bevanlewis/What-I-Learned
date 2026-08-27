@@ -13,15 +13,22 @@ Comparison operators are used to compare values and return a boolean value.
 
 | Operator | Description                                 |
 | -------- | ------------------------------------------- |
-| ==       | Equal to                                    |
-| ===      | Equal value and type                        |
-| !=       | Not equal                                   |
-| !==      | Not equal value or type                     |
+| ==       | Loose equality with type coercion            |
+| ===      | Strict equality without type coercion        |
+| !=       | Loose inequality with type coercion          |
+| !==      | Strict inequality without type coercion      |
 | >        | Greater than                                |
 | <        | Less than                                   |
 | >=       | Greater than or equal to                    |
 | <=       | Less than or equal to                       |
 | ?        | Ternary operator (condition ? true : false) |
+
+Prefer `===` and `!==` unless coercion is explicitly required.
+
+```javascript
+console.log(0 == false); // true
+console.log(0 === false); // false
+```
 
 ## Logical Operators
 
@@ -83,7 +90,7 @@ let result = a || b; // result is 1
 | -1            | NaN          |
 
 ```javascript
-// A value can be created into it's boolean form using the Boolean() function
+// A value can be converted to its boolean form using Boolean().
 let x = 10;
 let y = "hello";
 let z = [];
@@ -128,4 +135,14 @@ Logical operators can also be used with non-boolean values, which can lead to un
 console.log("hello" && "world"); // "world"
 console.log("" || "default"); // "default"
 console.log(null && "value"); // null
+```
+
+## `||` versus `??`
+
+`||` returns its right operand when the left operand is falsy. `??` does so only when the left operand is `null` or `undefined`.
+
+```javascript
+console.log(0 || 10); // 10
+console.log(0 ?? 10); // 0
+console.log(undefined ?? "default"); // "default"
 ```

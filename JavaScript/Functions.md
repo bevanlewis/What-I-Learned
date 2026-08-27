@@ -1,129 +1,201 @@
 # JavaScript Functions
 
-Functions are used to group a set of statements together to perform a specific task.
+Functions group reusable behaviour. Prefer small functions with clear inputs, outputs, and names.
 
-## Creating a function
-
-To create a function, use the `function` keyword followed by the name of the function.
+## Function declarations and expressions
 
 ```javascript
-function sayHello() {
-  console.log("Hello!");
+function add(a, b) {
+  return a + b;
 }
-sayHello(); // "Hello!"
+
+const subtract = function (a, b) {
+  return a - b;
+};
 ```
 
-## Passing arguments to a function
+Function declarations are hoisted, so they can be called earlier in the scope. A function expression cannot be used before its variable is initialized.
 
-To pass arguments to a function, you can use the `function(argument [, argument... ])` syntax.
+## Arrow functions
 
 ```javascript
-function greet(name) {
-  console.log(`Hello, ${name}!`);
-}
-greet("Alice"); // "Hello, Alice!"
-geet("Bob"); // "Hello, Bob!"
+const multiply = (a, b) => a * b;
+
+const describeUser = (user) => ({
+  id: user.id,
+  label: `${user.name} (${user.role})`,
+});
 ```
 
-### Default Parameters
+Parentheses are required when an arrow function implicitly returns an object literal.
 
-Default parameters allow you to set a default value for a parameter.
+Arrow functions do not define their own `this`, `arguments`, or `prototype`. Use a normal method when dynamic `this` is required:
+
+```javascript
+const person = {
+  name: "Ada",
+  greet() {
+    return `Hello, ${this.name}`;
+  },
+};
+```
+
+## Parameters
+
+### Default parameters
+
+Defaults apply when an argument is omitted or is `undefined`, but not when it is `null`.
 
 ```javascript
 function greet(name = "World") {
-  console.log(`Hello, ${name}!`);
+  return `Hello, ${name}!`;
 }
-greet(); // "Hello, World!"
-greet("Alice"); // "Hello, Alice!"
 ```
 
-## Returning values from a function
+### Rest parameters
 
-To return a value from a function, use the `return` keyword.
+Rest collects remaining arguments into an array:
 
 ```javascript
-function sum(a, b) {
-  return a + b;
+function sum(...numbers) {
+  return numbers.reduce((total, number) => total + number, 0);
 }
-console.log(sum(1, 2)); // 3
 ```
 
-### Returning functions from a function
+### Object parameters
 
-You can return a function from a function.
+An options object is clearer than several positional boolean arguments:
 
 ```javascript
-function createAdder(a) {
-  return function (b) {
-    return a + b;
+function listUsers(users, { activeOnly = false, limit = 10 } = {}) {
+  const selected = activeOnly
+    ? users.filter((user) => user.active)
+    : users;
+
+  return selected.slice(0, limit);
+}
+```
+
+## Return values and early returns
+
+A function without an explicit `return` returns `undefined`. Early returns keep validation and exceptional cases easy to follow.
+
+```javascript
+function normalizeName(value) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value.trim().toLowerCase();
+}
+```
+
+## Callbacks and higher-order functions
+
+A callback is passed to another function. A higher-order function accepts or returns a function.
+
+```javascript
+function selectUsers(users, predicate) {
+  return users.filter(predicate);
+}
+
+const activeUsers = selectUsers(users, (user) => user.active);
+```
+
+Returning a function can configure reusable behaviour:
+
+```javascript
+function hasMinimumScore(minimum) {
+  return (user) => user.score >= minimum;
+}
+
+const qualified = users.filter(hasMinimumScore(80));
+```
+
+## Closures
+
+A closure lets a function retain access to variables from the scope in which it was created.
+
+```javascript
+function createCounter() {
+  let count = 0;
+
+  return () => {
+    count += 1;
+    return count;
   };
 }
-let add5 = createAdder(5);
-console.log(add5(2)); // 7
+
+const next = createCounter();
+console.log(next()); // 1
+console.log(next()); // 2
 ```
 
-## Arrow Functions
-
-Arrow functions are a new way to write functions.
-
-```javascript
-let sayHello = () => console.log("Hello!");
-sayHello(); // "Hello!"
-```
+Closures are useful for factories, private state, event handlers, and dependency injection.
 
 ## Scope
 
-Scope determines where variables are accessible.
-
-### Global Scope
-
-Variables defined outside of a function have global scope.
+- Global scope is accessible throughout the program.
+- Function scope is accessible inside a function.
+- Block scope is accessible inside a `{}` block.
+- `let` and `const` are block-scoped; `var` is function-scoped.
 
 ```javascript
-let name = "John";
-function sayHello() {
-  console.log(`Hello, ${name}!`);
+function example() {
+  const functionValue = "available in this function";
+
+  if (true) {
+    const blockValue = "available only in this block";
+    console.log(functionValue, blockValue);
+  }
 }
-sayHello(); // "Hello, John!"
 ```
 
-### Local Scope
+## Pure functions and side effects
 
-Variables defined inside a function have local scope, meaning they are only accessible within that function.
+A pure function produces the same result for the same inputs and does not change external state.
 
 ```javascript
-function sayHello() {
-  let name = "Alice"; // This variable is defined inside the function and has local scope.
-  console.log(`Hello, ${name}!`); // This line logs the greeting to the console.
+function addTax(price, rate) {
+  return price * (1 + rate);
 }
-sayHello(); // This calls the function, executing the code inside it.
 ```
 
-### Block Scope
+Keep data transformation pure where practical. Put network requests, file access, logging, and UI updates at clear boundaries. Pure helpers are easier to test.
 
-Variables defined inside a block have block scope.
+## Function composition
+
+Complex processing is easier to understand as named steps:
 
 ```javascript
-if (true) {
-  let name = "Alice";
+const normalize = (value) => value.trim().toLowerCase();
+const includesQuery = (name, query) => normalize(name).includes(normalize(query));
+
+function searchActiveUsers(users, query) {
+  return users
+    .filter((user) => user.active)
+    .filter((user) => includesQuery(user.name ?? "", query));
 }
-console.log(name); // ReferenceError: name is not defined
 ```
 
-## Methods
+## Dependency injection
 
-Methods are functions that are properties of an object.
+Passing dependencies into a function makes behaviour easier to test and reuse:
 
 ```javascript
-let person = {
-  sayHello: function () {
-    console.log("Hello!");
-  },
-  // or
-  sayBye() {
-    console.log("Bye!");
-  },
-};
-person.sayHello(); // "Hello!"
-person.sayBye(); // "Bye!"
+async function loadUsers(request) {
+  const response = await request("/api/users");
+  return response.data;
+}
 ```
+
+Production code can pass an HTTP client; tests can pass a small deterministic function.
+
+## Common mistakes
+
+- Forgetting to return a value from a block-bodied arrow function.
+- Using an arrow function as an object method when it needs its own `this`.
+- Mutating an input when callers expect a pure transformation.
+- Passing many positional flags instead of a readable options object.
+- Combining validation, network access, transformation, and display in one function.
+- Catching an error inside a helper and returning `undefined` without documenting that behaviour.

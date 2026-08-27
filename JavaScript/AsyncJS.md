@@ -1,106 +1,228 @@
-# Asynchronous Javascript
+# Asynchronous JavaScript and APIs
 
-Asynchronous programming is a programming paradigm that allows you to write non-blocking code.
+Asynchronous JavaScript lets a program start work that finishes later without blocking all other work. Network requests, timers, and file operations commonly use promises.
 
-## Callback Function
+## The event loop
 
-A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of routine or action.
+JavaScript executes synchronous code on the call stack. Promise callbacks are queued as microtasks, while timers are queued as tasks. Microtasks run before the next task.
 
-# setInterval and setTimeout
+```javascript
+console.log("start");
 
-The `setInterval()` method executes a function or evaluates an expression at specified intervals (in milliseconds).
-The `setTimeout()` method calls a function or evaluates an expression after a specified number of milliseconds.
+setTimeout(() => console.log("timer"), 0);
+Promise.resolve().then(() => console.log("promise"));
+
+console.log("end");
+// start, end, promise, timer
+```
 
 ## Promises
 
-A promise is an object representing the eventual completion (or failure) of an asynchronous operation.
-
-### Async and Await
-
-The async and await keywords enable asynchronous, promise-based behavior to be written in a cleaner style, avoiding the need to explicitly configure promise chains.
-
-A function declared with async automatically returns a promise. The await keword is used when we want to wait for a promise to resolve before continuing our code execution.
+A promise is pending, fulfilled, or rejected.
 
 ```javascript
-async function doSomething() {
-  await somethingElse();
-  console.log("something");
+function delay(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
 }
-doSomething();
+
+delay(100)
+  .then(() => "finished")
+  .then(console.log)
+  .catch(console.error)
+  .finally(() => console.log("complete"));
 ```
 
-### then, catch and finally
+Return a promise from a `.then()` callback when the next step depends on it. A thrown error or rejected promise skips to the nearest `.catch()`.
 
-The `then()` method returns a Promise and deals with fulfilled results.
-The `catch()` method returns a Promise and deals with rejected results.
-The `finally()` method returns a Promise and deals with both fulfilled and rejected results.
+## `async` and `await`
+
+An `async` function always returns a promise. `await` pauses only that async function, not the entire JavaScript runtime.
 
 ```javascript
-function getSomething() {
-  // Writing our own Promise
-  return new Promise((resolve, reject) => {
-    if (/* everything turned out fine */) {
-      resolve("We got the data");
-    else {
-        reject(Error("It broke"));
-      }
-    }
+async function getMessage() {
+  await delay(100);
+  return "finished";
+}
+
+const message = await getMessage();
+```
+
+Use `try...catch` when the current layer can recover, add useful context, or translate the error. Otherwise allow the rejection to reach the caller.
+
+## Fetching JSON safely
+
+`fetch()` rejects for network failures, but it does not reject merely because the server returns an HTTP error such as `404` or `500`. Check `response.ok` explicitly.
+
+```javascript
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
   }
+
+  return response.json();
 }
-
-// Calling the function which returns a promise
-getSomething()
-  .then(result => {
-    console.log(result);
-  })
-  .catch(error => {
-    console.log(error);
-  }).finally(() => console.log("Promise"));
 ```
 
-# Dealing with API's and JSON
+`response.json()` is also asynchronous and can reject when the body is not valid JSON.
 
-### Parsing Json
-
-`JSON.parse(data)` is used to convert a JSON string into a JSON object.
-
-`JSON.stringify(data)` is used to convert a JSON object into a JSON string.
-
-## Fetch API
-
-The Fetch API provides an interface for fetching resources (including across the network). It will seem familiar to anyone who has used XMLHttpRequest, but the new API provides a more powerful and flexible feature set.
-
-### GET Request
+### GET request and data processing
 
 ```javascript
-fetch("https://api.github.com/users/github")
-  .then((response) => response.json())
-  .then((data) => console.log(data));
+async function getActiveUsers(searchTerm = "") {
+  const data = await fetchJson("https://example.com/api/users");
+
+  if (!Array.isArray(data)) {
+    throw new TypeError("Expected an array of users");
+  }
+
+  const query = searchTerm.trim().toLowerCase();
+
+  return data
+    .filter((user) => user?.active === true)
+    .filter((user) =>
+      typeof user.name === "string" &&
+      user.name.toLowerCase().includes(query),
+    )
+    .toSorted((a, b) => a.name.localeCompare(b.name));
+}
 ```
 
-### POST Request
+### POST request
 
 ```javascript
-const data = {
-  name: "github",
-  age: 30,
-  city: "San Francisco",
-};
-fetch("https://api.github.com/users/github", {
-  method: "POST",
-  body: JSON.stringify(data),
-  headers: {
-    "Content-type": "application/json; charset=UTF-8",
-  },
+async function createUser(user) {
+  return fetchJson("https://example.com/api/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+}
+```
+
+## Axios
+
+Axios rejects for non-successful HTTP status codes by default and makes parsed response data available on `response.data`.
+
+```javascript
+import axios from "axios";
+
+async function getUsers() {
+  const response = await axios.get("https://example.com/api/users");
+
+  if (!Array.isArray(response.data)) {
+    throw new TypeError("Expected an array of users");
+  }
+
+  return response.data;
+}
+```
+
+An Axios error may contain `error.response` for a server response, `error.request` when no response arrived, or neither when setup failed. Avoid exposing internal server details directly to users.
+
+## Sequential and parallel work
+
+Use sequential awaits when each operation depends on the previous result:
+
+```javascript
+const user = await fetchJson("/api/user/1");
+const company = await fetchJson(`/api/companies/${user.companyId}`);
+```
+
+Start independent operations together:
+
+```javascript
+const [users, projects] = await Promise.all([
+  fetchJson("/api/users"),
+  fetchJson("/api/projects"),
+]);
+```
+
+`Promise.all()` rejects when any input rejects. Use `Promise.allSettled()` when every result must be inspected even if some operations fail.
+
+```javascript
+const results = await Promise.allSettled(requests);
+
+const successfulValues = results
+  .filter((result) => result.status === "fulfilled")
+  .map((result) => result.value);
+```
+
+## Async array pitfalls
+
+`forEach()` does not wait for async callbacks:
+
+```javascript
+// Incorrect: the outer code does not wait for these operations.
+users.forEach(async (user) => {
+  await saveUser(user);
 });
 ```
 
-## Fetch
-
-The Fetch API provides an interface for fetching resources (including across the network).
+For parallel work:
 
 ```javascript
-fetch("https://api.github.com/users/github")
-  .then((response) => response.json()) // Parse the response as JSON
-  .then((data) => console.log(data)); // Log the data to the console
+await Promise.all(users.map((user) => saveUser(user)));
 ```
+
+For sequential work:
+
+```javascript
+for (const user of users) {
+  await saveUser(user);
+}
+```
+
+## Timeouts and cancellation
+
+Use `AbortController` to cancel a fetch:
+
+```javascript
+async function fetchWithTimeout(url, milliseconds = 5000) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), milliseconds);
+
+  try {
+    return await fetchJson(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+```
+
+## Retry decisions
+
+Retries are appropriate only for temporary failures and idempotent operations. Do not automatically retry validation errors, authentication failures, or non-idempotent writes unless the API supports safe retrying.
+
+A production retry strategy normally includes:
+
+- A small maximum attempt count.
+- Exponential backoff and jitter.
+- Cancellation or an overall time limit.
+- Logging or metrics.
+- A decision about which status codes are retryable.
+
+## JSON
+
+```javascript
+const json = JSON.stringify({ name: "Ada" });
+const value = JSON.parse(json);
+```
+
+JSON parsing validates syntax, not the shape or types of the resulting data. Validate API data before using it.
+
+## Common mistakes
+
+- Forgetting to check `response.ok` with `fetch()`.
+- Forgetting `await response.json()`.
+- Running independent requests sequentially.
+- Using async callbacks with `forEach()`.
+- Catching an error and silently returning incomplete data.
+- Assuming parsed JSON has the expected structure.
+- Retrying every failure, including invalid input.
+- Updating UI state after a request has been cancelled or superseded.
